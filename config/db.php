@@ -157,3 +157,51 @@ $conn->query("CREATE TABLE IF NOT EXISTS hasil_ujian (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_pendaftar (pendaftar_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+// 9. Tabel fakultas + prodi (dikelola admin, form pendaftaran dinamis dari sini)
+$conn->query("CREATE TABLE IF NOT EXISTS fakultas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  kode VARCHAR(10) NOT NULL UNIQUE,
+  label VARCHAR(150) NOT NULL,
+  aktif TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+$conn->query("CREATE TABLE IF NOT EXISTS prodi (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fakultas_id INT NOT NULL,
+  nama VARCHAR(150) NOT NULL,
+  aktif TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_prodi (fakultas_id, nama),
+  INDEX idx_fak (fakultas_id),
+  CONSTRAINT fk_prodi_fak FOREIGN KEY (fakultas_id) REFERENCES fakultas(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+// Seed fakultas + prodi awal jika kosong (data existing dari form lama)
+$cekF = $conn->query("SELECT COUNT(*) c FROM fakultas");
+if ($cekF && (int)$cekF->fetch_assoc()['c'] === 0) {
+    $seedFak = [
+        ['FST', 'Fakultas Sains & Teknologi (FST)'],
+        ['FIKES', 'Fakultas Ilmu Kesehatan (FIKES)'],
+        ['FKIP', 'Fakultas Keguruan & Ilmu Pendidikan (FKIP)'],
+        ['FAI', 'Fakultas Agama Islam (FAI)'],
+        ['FIS', 'Fakultas Ilmu Sosial (FIS)'],
+        ['FK', 'Fakultas Kedokteran (FK)'],
+    ];
+    $seedProdi = [
+        'FST' => ['S1 Bisnis Digital','S1 Sistem Informasi','S1 Ilmu Komputer','S1 Agribisnis','S1 Peternakan'],
+        'FIKES' => ['S1 Keperawatan','Profesi Ners','S1 Kebidanan','S1 Informatika Medis','S1 Keperawatan Anestesi'],
+        'FKIP' => ['S1 PGSD','S1 Pendidikan Olahraga','S1 Pendidikan Matematika'],
+        'FAI' => ['S1 Hukum Keluarga Islam (Ahwal Syakhshiyyah)','S1 Komunikasi Penyiaran Islam'],
+        'FIS' => ['S1 Manajemen','S1 Akuntansi','S1 Ekonomi Syariah'],
+        'FK' => ['S1 Kedokteran'],
+    ];
+    $insF = $conn->prepare("INSERT INTO fakultas (kode, label) VALUES (?, ?)");
+    foreach ($seedFak as $sf) { $insF->bind_param('ss', $sf[0], $sf[1]); $insF->execute(); }
+    $insF->close();
+    $insP = $conn->prepare("INSERT INTO prodi (fakultas_id, nama) SELECT id, ? FROM fakultas WHERE kode = ?");
+    foreach ($seedProdi as $kode => $list) {
+        foreach ($list as $nm) { $insP->bind_param('ss', $nm, $kode); $insP->execute(); }
+    }
+    $insP->close();
+}

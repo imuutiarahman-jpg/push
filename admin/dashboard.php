@@ -46,6 +46,7 @@ $flash = $_GET['msg'] ?? '';
         </div>
         <div class="flex gap-2">
             <a href="penguji.php" class="px-3 py-2 text-xs font-bold bg-amber-400 text-emerald-950 rounded-xl">Kelola Penguji</a>
+            <a href="prodi.php" class="px-3 py-2 text-xs font-bold bg-emerald-800 rounded-xl border border-emerald-600">Fakultas &amp; Prodi</a>
             <a href="jadwal.php" class="px-3 py-2 text-xs font-bold bg-emerald-800 rounded-xl border border-emerald-600">Jadwal &amp; Tempat</a>
             <a href="pengaturan.php" class="px-3 py-2 text-xs font-bold bg-emerald-900 rounded-xl border border-emerald-700">Pengaturan</a>
             <a href="logout.php" class="px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>

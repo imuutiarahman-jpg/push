@@ -98,6 +98,25 @@ CREATE TABLE IF NOT EXISTS hasil_ujian (
   INDEX idx_pendaftar (pendaftar_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Tabel fakultas + prodi (dikelola admin via admin/prodi.php)
+CREATE TABLE IF NOT EXISTS fakultas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  kode VARCHAR(10) NOT NULL UNIQUE,
+  label VARCHAR(150) NOT NULL,
+  aktif TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS prodi (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fakultas_id INT NOT NULL,
+  nama VARCHAR(150) NOT NULL,
+  aktif TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_prodi (fakultas_id, nama),
+  INDEX idx_fak (fakultas_id),
+  CONSTRAINT fk_prodi_fak FOREIGN KEY (fakultas_id) REFERENCES fakultas(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Akun default: username `admin`, password `admin123`
 -- Ganti password setelah login via SQL: UPDATE admin SET password_hash = ... ;
 INSERT INTO admin (username, password_hash) VALUES

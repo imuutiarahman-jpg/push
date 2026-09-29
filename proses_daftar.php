@@ -22,8 +22,17 @@ if ($nim !== $sessionNim) {
     header('Location: index.php?error=' . urlencode('NIM harus sama dengan akun login (' . $sessionNim . ').'));
     exit;
 }
-$fakultas  = $_POST['fakultas'] ?? '';
+$fakultas  = trim($_POST['fakultas'] ?? '');
 $prodi     = trim($_POST['prodi'] ?? '');
+// Validasi fakultas + prodi ke master yang dikelola admin (hanya yang aktif)
+$fakRow = null;
+if ($fakultas !== '') {
+    $cf = $conn->prepare('SELECT id, kode, label FROM fakultas WHERE kode = ? AND aktif = 1 LIMIT 1');
+    $cf->bind_param('s', $fakultas);
+    $cf->execute();
+    $fakRow = $cf->get_result()->fetch_assoc();
+    $cf->close();
+}
 // Semester baru: tipe Ganjil/Genap + tingkat; tetap dukung format lama
 $semTipe = $_POST['semester_tipe'] ?? '';
 $semTingkat = trim($_POST['semester_tingkat'] ?? '');
@@ -49,22 +58,19 @@ $jalurAllowed = ['Reguler','NonReg','S2','RPL'];
 if (!in_array($jalur, $jalurAllowed, true)) fail('Jalur mahasiswa tidak valid. Pilih Reguler / NonReg / S2 / RPL.');
 $jadwalId  = (int)($_POST['jadwal_id'] ?? 0);
 
-$fakultasMap = [
-    'FST' => 'Fakultas Sains & Teknologi (FST)',
-    'FIKES' => 'Fakultas Ilmu Kesehatan (FIKES)',
-    'FKIP' => 'Fakultas Keguruan & Ilmu Pendidikan (FKIP)',
-    'FAI' => 'Fakultas Agama Islam (FAI)',
-    'FIS' => 'Fakultas Ilmu Sosial (FIS)',
-    'FK' => 'Fakultas Kedokteran (FK)',
-];
-
 function fail($msg) {
     header('Location: index.php?error=' . urlencode($msg));
     exit;
 }
 
 if ($nama === '' || $nim === '' || $prodi === '' || $hp === '' || $email === '' ) fail('Lengkapi semua field wajib.');
-if (!isset($fakultasMap[$fakultas])) fail('Fakultas tidak valid.');
+if (!$fakRow) fail('Fakultas tidak valid / nonaktif. Hubungi admin jika fakultas baru belum muncul.');
+$cp = $conn->prepare('SELECT id FROM prodi WHERE fakultas_id = ? AND nama = ? AND aktif = 1 LIMIT 1');
+$cp->bind_param('is', $fakRow['id'], $prodi);
+$cp->execute();
+$cp->store_result();
+if ($cp->num_rows === 0) { $cp->close(); fail('Program studi tidak valid / nonaktif untuk fakultas tersebut.'); }
+$cp->close();
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) fail('Format email tidak valid.');
 
 // Validasi jadwal (ditentukan admin via Kelola Jadwal & Tempat) -> snapshot teks
@@ -138,7 +144,7 @@ $safeName = $regNo . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', basename($f['n
 $target = $uploadDir . '/' . $safeName;
 if (!move_uploaded_file($f['tmp_name'], $target)) fail('Gagal menyimpan berkas.');
 
-$fakultasLabel = $fakultasMap[$fakultas];
+$fakultasLabel = $fakRow['label'];
 $stmt = $conn->prepare('INSERT INTO pendaftar (user_id, penguji_id, reg_no, nama, nim, fakultas, fakultas_label, prodi, semester, hp, email, kategori, jalur, gelombang, file_krs, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"MENUNGGU")');
 $stmt->bind_param('iisssssssssssss', $userId, $pengujiId, $regNo, $nama, $nim, $fakultas, $fakultasLabel, $prodi, $semester, $hp, $email, $kategori, $jalur, $gelombang, $safeName);
 if (!$stmt->execute()) {

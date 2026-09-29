@@ -49,6 +49,13 @@ function tgl_id_fmt($ymd){
 $jadwalList = [];
 $jq = $conn->query("SELECT * FROM jadwal WHERE aktif = 1 ORDER BY tanggal, id");
 if ($jq) $jadwalList = $jq->fetch_all(MYSQLI_ASSOC);
+// Fakultas + prodi aktif (dikelola admin via Kelola Fakultas & Prodi)
+$fakultasList = [];
+$fq = $conn->query("SELECT * FROM fakultas WHERE aktif = 1 ORDER BY kode");
+if ($fq) $fakultasList = $fq->fetch_all(MYSQLI_ASSOC);
+$prodiMap = [];
+$pq = $conn->query("SELECT pr.nama, f.kode FROM prodi pr JOIN fakultas f ON f.id = pr.fakultas_id WHERE pr.aktif = 1 AND f.aktif = 1 ORDER BY f.kode, pr.nama");
+if ($pq) while ($pp = $pq->fetch_assoc()) $prodiMap[$pp['kode']][] = $pp['nama'];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -214,12 +221,13 @@ if ($jq) $jadwalList = $jq->fetch_all(MYSQLI_ASSOC);
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-2">Fakultas *</label>
                     <select name="fakultas" id="reg-fakultas" onchange="updateProdiDropdown()" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:border-amber-400 focus:outline-none">
-                        <option value="FST">Fakultas Sains &amp; Teknologi (FST)</option>
-                        <option value="FIKES">Fakultas Ilmu Kesehatan (FIKES)</option>
-                        <option value="FKIP">Fakultas Keguruan &amp; Ilmu Pendidikan (FKIP)</option>
-                        <option value="FAI">Fakultas Agama Islam (FAI)</option>
-                        <option value="FIS">Fakultas Ilmu Sosial (FIS)</option>
-                        <option value="FK">Fakultas Kedokteran (FK)</option>
+                        <?php if (!$fakultasList): ?>
+                        <option value="">Belum ada fakultas aktif — hubungi admin</option>
+                        <?php else: ?>
+                        <?php foreach ($fakultasList as $fl): ?>
+                        <option value="<?= e_row($fl['kode']) ?>"><?= e_row($fl['label']) ?></option>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                 </div>
                 <div>
@@ -451,18 +459,13 @@ if ($jq) $jadwalList = $jq->fetch_all(MYSQLI_ASSOC);
 </footer>
 
 <script>
-const prodiData = {
-    'FST': ['S1 Bisnis Digital','S1 Sistem Informasi','S1 Ilmu Komputer','S1 Agribisnis','S1 Peternakan'],
-    'FIKES': ['S1 Keperawatan','Profesi Ners','S1 Kebidanan','S1 Informatika Medis','S1 Keperawatan Anestesi'],
-    'FKIP': ['S1 PGSD','S1 Pendidikan Olahraga','S1 Pendidikan Matematika'],
-    'FAI': ['S1 Hukum Keluarga Islam (Ahwal Syakhshiyyah)','S1 Komunikasi Penyiaran Islam'],
-    'FIS': ['S1 Manajemen','S1 Akuntansi','S1 Ekonomi Syariah'],
-    'FK': ['S1 Kedokteran']
-};
+const prodiData = <?= json_encode($prodiMap ?: new stdClass(), JSON_UNESCAPED_UNICODE) ?>;
 function updateProdiDropdown(){
     const fak = document.getElementById('reg-fakultas').value;
     const sel = document.getElementById('reg-prodi'); sel.innerHTML='';
-    (prodiData[fak]||[]).forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; sel.appendChild(o); });
+    const list = prodiData[fak] || [];
+    if (!list.length) { const o=document.createElement('option'); o.value=''; o.textContent='Belum ada prodi aktif — hubungi admin'; sel.appendChild(o); return; }
+    list.forEach(p=>{ const o=document.createElement('option'); o.value=p; o.textContent=p; sel.appendChild(o); });
 }
 function updateSemesterTingkat(){
     const tipe = document.getElementById('reg-sem-tipe').value;
