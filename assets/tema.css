@@ -1,0 +1,18 @@
+/* Tema UPT AIK UMGO — background mengikuti teal tua logo.
+   Dipasang setelah <style> per-halaman sehingga menang tanpa ubah markup. */
+body {
+  background-color: #051f27 !important;
+  background-image:
+    radial-gradient(rgba(23, 116, 134, 0.55) 0.8px, transparent 0.8px),
+    radial-gradient(rgba(23, 116, 134, 0.55) 0.8px, #051f27 0.8px) !important;
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+/* Cetak resmi tetap hitam-putih */
+@media print {
+  body {
+    background: #fff !important;
+    background-image: none !important;
+  }
+}

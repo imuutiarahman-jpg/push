@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Penguji Baca Al-Qur'an (BTQ) - UMGO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="assets/tema.js"></script>
+    <link rel="stylesheet" href="assets/tema.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #064e3b;
+            background-image: radial-gradient(#047857 0.75px, transparent 0.75px), radial-gradient(#047857 0.75px, #022c22 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+        @media print {
+            body {
+                background: none !important;
+                background-color: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                background: white !important;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / BRANDING -->
+    <header class="no-print bg-emerald-950/90 backdrop-blur border-b border-emerald-700/50 sticky top-0 z-50 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-emerald-800 border-2 border-amber-400 flex items-center justify-center text-amber-300 font-bold shadow-md">
+                    <i data-lucide="book-open-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold tracking-wide text-amber-300">UNIVERSITAS MUHAMMADIYAH GORONTALO</h1>
+                    <p class="text-xs sm:text-sm text-emerald-200 font-medium">Lembaga Pengkajian Al-Qur'an & Keislaman (LPK-AIK) • Ujian BTQ</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-3">
+                <button onclick="scrollToSection('history-section')" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 border border-emerald-600 rounded-xl text-xs font-semibold text-emerald-100 flex items-center gap-2 transition">
+                    <i data-lucide="history" class="w-4 h-4 text-amber-400"></i> Riwayat Ujian
+                </button>
+                <div class="text-right pl-4 border-l border-emerald-800">
+                    <span class="text-xs text-emerald-300 block">Status Aplikasi</span>
+                    <span class="text-xs font-bold text-amber-400 flex items-center justify-end gap-1">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> Mode Penguji Ready
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
+        
+        <!-- TOP INFO / BANNER -->
+        <div class="no-print bg-gradient-to-r from-emerald-900/90 via-emerald-800/80 to-emerald-950/90 border border-emerald-600/40 rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden backdrop-blur">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-white font-arabic text-9xl pointer-events-none select-none">
+                القرآن
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold rounded-full mb-2">
+                        Sistem Penilaian Standar LPK-AIK UMGO
+                    </span>
+                    <h2 class="text-2xl font-bold">Instrumen Penilaian Baca Al-Qur'an & Tajwid</h2>
+                    <p class="text-emerald-200 text-xs sm:text-sm mt-1 max-w-2xl">
+                        Aplikasi resmi pengujian kelancaran, makhraj, tajwid, adab, dan hafalan surah pendek bagi mahasiswa UMGO.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetForm()" class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-600 transition flex items-center gap-1.5">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT COLUMN: INPUT DATA & BANK AYAT -->
+            <div class="space-y-6 no-print">
+                
+                <!-- Form Data Mahasiswa & Penguji -->
+                <div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-6 text-slate-100 shadow-xl backdrop-blur">
+                    <h3 class="text-base font-bold text-amber-400 flex items-center gap-2 mb-4 border-b border-slate-800 pb-3">
+                        <i data-lucide="user-check" class="w-5 h-5 text-emerald-400"></i> Identitas Ujian
+                    </h3>
+                    
+                    <form id="exam-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Mahasiswa *</label>
+                            <input type="text" id="mhs-name" required placeholder="Masukkan Nama Lengkap" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">NIM *</label>
+                                <input type="text" id="mhs-nim" required placeholder="Contoh: 202401001" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Gelombang/Kategori</label>
+                                <select id="exam-wave" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                    <option value="Reguler">Reguler</option>
+                                    <option value="Gelombang I">Gelombang I</option>
+                                    <option value="Gelombang II">Gelombang II</option>
+                                    <option value="Remedial / Susulan">Remedial / Susulan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Fakultas *</label>
+                            <select id="mhs-fakultas" onchange="updateProdiOptions()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <option value="FST">Fakultas Sains & Teknologi (FST)</option>
+                                <option value="FIKES">Fakultas Ilmu Kesehatan (FIKES)</option>
+                                <option value="FKIP">Fakultas Keguruan & Ilmu Pendidikan (FKIP)</option>
+                                <option value="FSI">Fakultas Studi Islam (FSI)</option>
+                                <option value="FEB">Fakultas Ekonomi & Bisnis (FEB)</option>
+                                <option value="FH">Fakultas Hukum (FH)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Program Studi *</label>
+                            <select id="mhs-prodi" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-800 space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Penguji / Dosen *</label>
+                                <input type="text" id="examiner-name" required placeholder="Nama Penguji beserta Gelar" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Ujian</label>
+                                <input type="date" id="exam-date" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- BANK AYAT & SURAH ACAK -->
+                <div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-6 text-slate-100 shadow-xl backdrop-blur">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-base font-bold text-amber-400 flex items-center gap-2">
+                            <i data-lucide="shuffle" class="w-5 h-5 text-emerald-400"></i> Acak Bahan Ujian
+                        </h3>
+                        <button onclick="getRandomVerse()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition shadow">
+                            <i data-lucide="dices" class="w-3.5 h-3.5"></i> Acak Ayat
+                        </button>
+                    </div>
+
+                    <div id="quran-card" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center space-y-3">
+                        <span id="quran-title" class="inline-block px-3 py-1 bg-emerald-950 border border-emerald-700 text-emerald-300 text-xs font-bold rounded-full">
+                            Surah Al-Baqarah (Ayat 255) - Ayat Kursi
+                        </span>
+                        <p id="quran-arabic" class="font-arabic text-xl sm:text-2xl text-amber-300 leading-loose py-2 dir-rtl">
+                            اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ
+                        </p>
+                        <p id="quran-latin" class="text-xs text-slate-400 italic">
+                            "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm, lā ta'khużuhū sinatuw wa lā naūm..."
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: INSTRUMEN PENILAIAN & RESULT -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- INSTRUMEN PENILAIAN CARD -->
+                <div class="no-print bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-6 text-slate-100 shadow-xl backdrop-blur space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i data-lucide="sliders" class="w-5 h-5 text-emerald-400"></i> Form Penilaian Standar
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Geser slider atau masukkan angka nilai (0 - 100) untuk tiap komponen.</p>
+                        </div>
+                        <span class="text-xs px-3 py-1 bg-amber-400/10 text-amber-300 border border-amber-400/30 font-semibold rounded-full">Total Bobot: 100%</span>
+                    </div>
+
+                    <!-- Input Nilai Components -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Komponen 1: Tajwid & Makhraj -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-sm text-emerald-300">1. Tajwid & Makhraj</h4>
+                                    <p class="text-[11px] text-slate-400">Kejelasan makharijul huruf, Hukum Nun/Mim Mati, Mad</p>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Bobot 40%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="score-tajwid-range" min="0" max="100" value="80" oninput="syncScore('tajwid', 'range')" class="w-full accent-emerald-500">
+                                <input type="number" id="score-tajwid" min="0" max="100" value="80" oninput="syncScore('tajwid', 'input')" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-center font-bold text-amber-300 text-sm focus:border-emerald-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Komponen 2: Kelancaran -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-sm text-emerald-300">2. Kelancaran & Waqaf</h4>
+                                    <p class="text-[11px] text-slate-400">Kelancaran bacaan, ketepatan berhentinya waqaf & ibtida'</p>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Bobot 30%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="score-kelancaran-range" min="0" max="100" value="75" oninput="syncScore('kelancaran', 'range')" class="w-full accent-emerald-500">
+                                <input type="number" id="score-kelancaran" min="0" max="100" value="75" oninput="syncScore('kelancaran', 'input')" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-center font-bold text-amber-300 text-sm focus:border-emerald-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Komponen 3: Adab -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-sm text-emerald-300">3. Adab & Sikap</h4>
+                                    <p class="text-[11px] text-slate-400">Kesiapan, kebersihan, kerapian berpakaian, penghormatan</p>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Bobot 15%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="score-adab-range" min="0" max="100" value="85" oninput="syncScore('adab', 'range')" class="w-full accent-emerald-500">
+                                <input type="number" id="score-adab" min="0" max="100" value="85" oninput="syncScore('adab', 'input')" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-center font-bold text-amber-300 text-sm focus:border-emerald-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Komponen 4: Hafalan -->
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-sm text-emerald-300">4. Hafalan Surah / Doa</h4>
+                                    <p class="text-[11px] text-slate-400">Hafalan Surah Pendek (Juz 30) atau doa harian</p>
+                                </div>
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Bobot 15%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="range" id="score-hafalan-range" min="0" max="100" value="80" oninput="syncScore('hafalan', 'range')" class="w-full accent-emerald-500">
+                                <input type="number" id="score-hafalan" min="0" max="100" value="80" oninput="syncScore('hafalan', 'input')" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-center font-bold text-amber-300 text-sm focus:border-emerald-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Notes & Feedback -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Catatan Perbaikan / Evaluasi Penguji</label>
+                        <textarea id="exam-notes" rows="3" placeholder="Contoh: Perhatikan hukum Mad Thabi'i dan kejelasan makhraj huruf 'Ain. Waqaf di ayat 3 perlu diperbaiki..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition"></textarea>
+                    </div>
+                </div>
+
+                <!-- REAL-TIME SCORE SUMMARY CARD -->
+                <div class="no-print bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-amber-400/40 rounded-2xl p-6 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-5 w-full md:w-auto">
+                        <div id="grade-badge" class="w-20 h-20 rounded-2xl bg-emerald-600 border-2 border-amber-400 flex flex-col items-center justify-center text-center shadow-lg transform transition-transform duration-300 hover:scale-105">
+                            <span id="res-grade" class="text-3xl font-extrabold text-white leading-none">A</span>
+                            <span id="res-arabic-grade" class="text-[10px] text-amber-200 font-arabic mt-0.5">ممتاز</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 uppercase font-bold tracking-wider">Hasil Akhir Kalkulasi</span>
+                            <div class="flex items-baseline gap-2 mt-0.5">
+                                <h3 id="res-total-score" class="text-3xl font-black text-amber-400">79.50</h3>
+                                <span class="text-xs text-slate-400">/ 100 Skala Nilai</span>
+                            </div>
+                            <p id="res-predicate" class="text-xs text-emerald-400 font-semibold mt-1">Status: LULUS (Sangat Memuaskan)</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                        <button onclick="saveExamRecord()" class="flex-1 md:flex-none px-5 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl border border-slate-600 transition flex items-center justify-center gap-2 shadow">
+                            <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i> Simpan Data
+                        </button>
+                        <button onclick="printOfficialReport()" class="flex-1 md:flex-none px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition transform active:scale-95">
+                            <i data-lucide="printer" class="w-4 h-4 text-amber-300"></i> Cetak Berita Acara
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- REKAPITULASI RIWAYAT UJIAN (LOCALSTORAGE) -->
+        <section id="history-section" class="no-print bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-6 text-slate-100 shadow-xl backdrop-blur space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="database" class="w-5 h-5 text-amber-400"></i> Riwayat Ujian Mahasiswa
+                    </h3>
+                    <p class="text-xs text-slate-400">Daftar mahasiswa yang telah selesai dinilai dan tersimpan otomatis.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="clearAllHistory()" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 text-xs font-medium rounded-lg transition flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Bersihkan Semua
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                        <tr>
+                            <th class="p-3">Tanggal</th>
+                            <th class="p-3">Mahasiswa</th>
+                            <th class="p-3">NIM / Prodi</th>
+                            <th class="p-3">Penguji</th>
+                            <th class="p-3 text-center">Nilai</th>
+                            <th class="p-3 text-center">Predikat</th>
+                            <th class="p-3 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body" class="divide-y divide-slate-800/60">
+                        <!-- Dynamic History Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PRINT ONLY OFFICIAL REPORT DOCUMENT (KOP SURAT LPK-AIK UMGO) -->
+        <div id="print-area" class="print-only p-8 bg-white text-black space-y-6">
+            <!-- Kop Surat -->
+            <div class="border-b-4 border-double border-emerald-900 pb-4 text-center relative">
+                <div class="flex items-center justify-center gap-4 mb-2">
+                    <div class="w-16 h-16 rounded-full bg-emerald-800 text-amber-300 font-bold flex items-center justify-center text-xl border-2 border-amber-400">
+                        UMGO
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold tracking-wide uppercase text-emerald-950">Universitas Muhammadiyah Gorontalo</h2>
+                        <h3 class="text-base font-bold text-slate-800">Lembaga Pengkajian Al-Qur'an & Keislaman (LPK-AIK)</h3>
+                        <p class="text-xs text-slate-600 italic">Jl. Prof. Dr. H. Aloei Saboe, Desa Pentadio Timur, Telaga Biru, Gorontalo</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="text-center space-y-1">
+                <h3 class="text-lg font-bold underline uppercase tracking-wider text-slate-900">BERITA ACARA UJIAN BACA AL-QUR'AN (BTQ)</h3>
+                <p class="text-xs text-slate-600">Nomor: <span id="print-doc-no">UMGO/LPK-AIK/BTQ/2026/001</span></p>
+            </div>
+
+            <!-- Student Data Table -->
+            <div class="space-y-2">
+                <h4 class="font-bold text-xs uppercase border-b border-slate-300 pb-1">I. IDENTITAS MAHASISWA & PENGUJI</h4>
+                <table class="w-full text-xs">
+                    <tr>
+                        <td class="w-32 py-1 font-semibold">Nama Mahasiswa</td>
+                        <td class="w-4">:</td>
+                        <td id="print-mhs-name" class="font-bold">--------</td>
+                        <td class="w-32 py-1 font-semibold">Fakultas</td>
+                        <td class="w-4">:</td>
+                        <td id="print-fakultas">--------</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 font-semibold">NIM</td>
+                        <td>:</td>
+                        <td id="print-mhs-nim">--------</td>
+                        <td class="py-1 font-semibold">Program Studi</td>
+                        <td>:</td>
+                        <td id="print-prodi">--------</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 font-semibold">Dosen Penguji</td>
+                        <td>:</td>
+                        <td id="print-examiner">--------</td>
+                        <td class="py-1 font-semibold">Tanggal Ujian</td>
+                        <td>:</td>
+                        <td id="print-date">--------</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Score Table -->
+            <div class="space-y-2">
+                <h4 class="font-bold text-xs uppercase border-b border-slate-300 pb-1">II. RINCIAN HASIL PENILAIAN</h4>
+                <table class="w-full text-xs border-collapse border border-slate-400">
+                    <thead>
+                        <tr class="bg-slate-100">
+                            <th class="border border-slate-400 p-2 text-center w-10">No</th>
+                            <th class="border border-slate-400 p-2 text-left">Komponen Penilaian</th>
+                            <th class="border border-slate-400 p-2 text-center w-20">Bobot</th>
+                            <th class="border border-slate-400 p-2 text-center w-24">Nilai Mentah</th>
+                            <th class="border border-slate-400 p-2 text-center w-24">Nilai Terbobot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-slate-400 p-2 text-center">1</td>
+                            <td class="border border-slate-400 p-2">Makharijul Huruf & Hukum Tajwid</td>
+                            <td class="border border-slate-400 p-2 text-center">40%</td>
+                            <td id="print-score-tajwid" class="border border-slate-400 p-2 text-center">0</td>
+                            <td id="print-weighted-tajwid" class="border border-slate-400 p-2 text-center font-semibold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-400 p-2 text-center">2</td>
+                            <td class="border border-slate-400 p-2">Kelancaran Bacaan & Waqaf-Ibtida'</td>
+                            <td class="border border-slate-400 p-2 text-center">30%</td>
+                            <td id="print-score-kelancaran" class="border border-slate-400 p-2 text-center">0</td>
+                            <td id="print-weighted-kelancaran" class="border border-slate-400 p-2 text-center font-semibold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-400 p-2 text-center">3</td>
+                            <td class="border border-slate-400 p-2">Adab, Kerapian & Sikap</td>
+                            <td class="border border-slate-400 p-2 text-center">15%</td>
+                            <td id="print-score-adab" class="border border-slate-400 p-2 text-center">0</td>
+                            <td id="print-weighted-adab" class="border border-slate-400 p-2 text-center font-semibold">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-400 p-2 text-center">4</td>
+                            <td class="border border-slate-400 p-2">Hafalan Surah Pendek / Doa Harian</td>
+                            <td class="border border-slate-400 p-2 text-center">15%</td>
+                            <td id="print-score-hafalan" class="border border-slate-400 p-2 text-center">0</td>
+                            <td id="print-weighted-hafalan" class="border border-slate-400 p-2 text-center font-semibold">0</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-slate-100 font-bold">
+                            <td colspan="4" class="border border-slate-400 p-2 text-right">TOTAL NILAI AKHIR:</td>
+                            <td id="print-final-score" class="border border-slate-400 p-2 text-center text-sm font-black text-emerald-950">0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Predicate Result -->
+            <div class="border border-slate-300 p-3 rounded bg-slate-50 flex justify-between items-center text-xs">
+                <div>
+                    <span class="font-bold block">PREDIKAT KELULUSAN:</span>
+                    <span id="print-predicate-text" class="text-sm font-extrabold uppercase">MEMUASKAN (JAYYID JIDDAN)</span>
+                </div>
+                <div class="text-right">
+                    <span class="font-bold block">STATUS:</span>
+                    <span id="print-status" class="text-sm font-extrabold text-emerald-800">LULUS</span>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="space-y-1 text-xs">
+                <span class="font-bold">CATATAN PENGUJI:</span>
+                <p id="print-notes" class="p-2 border border-slate-300 rounded italic text-slate-700 bg-white">Tidak ada catatan khusus.</p>
+            </div>
+
+            <!-- Signatures -->
+            <div class="pt-8 flex justify-between items-end text-xs">
+                <div class="text-center w-48 space-y-12">
+                    <p>Mahasiswa Teruji,</p>
+                    <p id="print-sig-mhs" class="font-bold underline uppercase">( ......................................... )</p>
+                </div>
+                <div class="text-center w-56 space-y-12">
+                    <p>Gorontalo, <span id="print-sig-date">16 September 2026</span><br>Dosen Penguji,</p>
+                    <p id="print-sig-examiner" class="font-bold underline uppercase">( ......................................... )</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="no-print bg-slate-950 border-t border-slate-800 text-slate-400 text-xs py-4 text-center">
+        <p>© 2026 Universitas Muhammadiyah Gorontalo (UMGO) • Lembaga Pengkajian Al-Qur'an & Keislaman</p>
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+        <span id="toast-message">Notifikasi</span>
+    </div>
+
+    <script>
+        // Data Fakultas & Prodi UMGO
+        const prodiData = {
+            'FST': ['S1 Teknik Informatika', 'S1 Sistem Informasi', 'S1 Perencanaan Wilayah & Kota', 'S1 Agribisnis', 'S1 Peternakan'],
+            'FIKES': ['S1 Keperawatan', 'Profesi Ners', 'S1 Kebidanan', 'D3 Kebidanan', 'S1 Farmasi', 'S1 Kesehatan Masyarakat'],
+            'FKIP': ['S1 Pendidikan Bahasa Inggris', 'S1 PGSD', 'S1 Pendidikan Olahraga', 'S1 Pendidikan Matematika'],
+            'FSI': ['S1 Hukum Keluarga Islam (Ahwal Syakhshiyyah)', 'S1 Komunikasi Penyiaran Islam'],
+            'FEB': ['S1 Manajemen', 'S1 Akuntansi', 'S1 Ekonomi Syariah'],
+            'FH': ['S1 Ilmu Hukum']
+        };
+
+        // Quran Random Verse Bank
+        const quranBank = [
+            {
+                title: "Surah Al-Baqarah (Ayat 255) - Ayat Kursi",
+                arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ",
+                latin: "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm, lā ta'khużuhū sinatuw wa lā naūm, lahū mā fis-samāwāti wa mā fil-arḍ..."
+            },
+            {
+                title: "Surah Al-Mulk (Ayat 1-2)",
+                arabic: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ ﴿١﴾ الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا",
+                latin: "Tabārakallażī biyadihil-mulku wa huwa 'alā kulli syai'in qadīr. Allażī khalaqal-mauta wal-ḥayāta liyabluwakum ayyukum aḥsanu 'amalā..."
+            },
+            {
+                title: "Surah Yasin (Ayat 1-5)",
+                arabic: "يس ﴿١﴾ وَالْقُرْآنِ الْحَكِيمِ ﴿٢﴾ إِنَّكَ لَمِنَ الْمُرْسَلِينَ ﴿٣﴾ عَلَىٰ صِرَاطٍ مُسْتَقِيمٍ ﴿٤﴾ تَنْزِيلَ الْعَزِيزِ الرَّحِيمِ",
+                latin: "Yā Sīn. Wal-qur'ānil-ḥakīm. Innaka laminal-mursalīn. 'Alā ṣirāṭim mustaqīm. Tanzīlal-'azīzir-raḥīm."
+            },
+            {
+                title: "Surah An-Naba' (Ayat 1-5)",
+                arabic: "عَمَّ يَتَسَاءَلُونَ ﴿١﴾ عَنِ النَّبَإِ الْعَظِيمِ ﴿٢﴾ الَّذِي هُمْ فِيهِ مُخْتَلِفُونَ ﴿٣﴾ كَلَّا سَيَعْلَمُونَ",
+                latin: "'Amma yatasā'alūn. 'Anin-naba'il-'aẓīm. Allażī hum fīhi mukhtalifūn. Kallā saya'lamūn."
+            },
+            {
+                title: "Surah Al-Hashr (Ayat 22)",
+                arabic: "هُوَ اللَّهُ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ ۖ عَالِمُ الْغَيْبِ وَالشَّهَادَةِ ۖ هُوَ الرَّحْمَٰنُ الرَّحِيمُ",
+                latin: "Huwallāhullażī lā ilāha illā huw, 'ālimul-ghaibi wasy-syahādah, huwar-raḥmānur-raḥīm."
+            }
+        ];
+
+        let currentScores = {
+            tajwid: 80,
+            kelancaran: 75,
+            adab: 85,
+            hafalan: 80
+        };
+
+        // App Initialization
+        window.onload = function() {
+            lucide.createIcons();
+            updateProdiOptions();
+            setDefaultDate();
+            calculateFinalScore();
+            loadHistoryTable();
+        };
+
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('exam-date').value = today;
+        }
+
+        function updateProdiOptions() {
+            const fak = document.getElementById('mhs-fakultas').value;
+            const prodiSelect = document.getElementById('mhs-prodi');
+            prodiSelect.innerHTML = '';
+            
+            prodiData[fak].forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.innerText = p;
+                prodiSelect.appendChild(opt);
+            });
+        }
+
+        function syncScore(component, source) {
+            const range = document.getElementById(`score-${component}-range`);
+            const input = document.getElementById(`score-${component}`);
+
+            if (source === 'range') {
+                input.value = range.value;
+            } else {
+                let val = parseInt(input.value) || 0;
+                if (val > 100) val = 100;
+                if (val < 0) val = 0;
+                input.value = val;
+                range.value = val;
+            }
+
+            currentScores[component] = parseFloat(input.value) || 0;
+            calculateFinalScore();
+        }
+
+        function calculateFinalScore() {
+            // Bobot: Tajwid 40%, Kelancaran 30%, Adab 15%, Hafalan 15%
+            const weightedTajwid = currentScores.tajwid * 0.40;
+            const weightedKelancaran = currentScores.kelancaran * 0.30;
+            const weightedAdab = currentScores.adab * 0.15;
+            const weightedHafalan = currentScores.hafalan * 0.15;
+
+            const total = weightedTajwid + weightedKelancaran + weightedAdab + weightedHafalan;
+            const formattedTotal = total.toFixed(2);
+
+            document.getElementById('res-total-score').innerText = formattedTotal;
+
+            // Determine Grade & Predicate
+            let grade = 'D';
+            let arabicGrade = 'راسب';
+            let predicateText = 'TIDAK LULUS (Rasib / Kurang)';
+            let isPassed = false;
+            let badgeBg = 'bg-red-600';
+
+            if (total >= 85) {
+                grade = 'A';
+                arabicGrade = 'ممتاز';
+                predicateText = 'LULUS (Mumtaz / Sangat Memuaskan)';
+                isPassed = true;
+                badgeBg = 'bg-emerald-600';
+            } else if (total >= 75) {
+                grade = 'B';
+                arabicGrade = 'جيد جداً';
+                predicateText = 'LULUS (Jayyid Jiddan / Memuaskan)';
+                isPassed = true;
+                badgeBg = 'bg-emerald-600';
+            } else if (total >= 65) {
+                grade = 'C';
+                arabicGrade = 'جيد';
+                predicateText = 'LULUS (Jayyid / Cukup)';
+                isPassed = true;
+                badgeBg = 'bg-amber-600';
+            }
+
+            const badge = document.getElementById('grade-badge');
+            badge.className = `w-20 h-20 rounded-2xl ${badgeBg} border-2 border-amber-400 flex flex-col items-center justify-center text-center shadow-lg transform transition-transform duration-300 hover:scale-105`;
+
+            document.getElementById('res-grade').innerText = grade;
+            document.getElementById('res-arabic-grade').innerText = arabicGrade;
+            document.getElementById('res-predicate').innerText = `Status: ${predicateText}`;
+
+            return { total: formattedTotal, grade, predicateText, isPassed };
+        }
+
+        function getRandomVerse() {
+            const randomIndex = Math.floor(Math.random() * quranBank.length);
+            const item = quranBank[randomIndex];
+
+            document.getElementById('quran-title').innerText = item.title;
+            document.getElementById('quran-arabic').innerText = item.arabic;
+            document.getElementById('quran-latin').innerText = `"${item.latin}"`;
+
+            showToast('Bahan ujian ayat berhasil diacak!');
+        }
+
+        function saveExamRecord() {
+            const mhsName = document.getElementById('mhs-name').value.trim();
+            const mhsNim = document.getElementById('mhs-nim').value.trim();
+
+            if (!mhsName || !mhsNim) {
+                showToast('Harap isi Nama Mahasiswa dan NIM terlebih dahulu!');
+                return;
+            }
+
+            const calc = calculateFinalScore();
+            const record = {
+                id: Date.now(),
+                date: document.getElementById('exam-date').value,
+                mhsName: mhsName,
+                mhsNim: mhsNim,
+                fakultas: document.getElementById('mhs-fakultas').value,
+                prodi: document.getElementById('mhs-prodi').value,
+                examiner: document.getElementById('examiner-name').value || 'Dosen LPK-AIK',
+                totalScore: calc.total,
+                grade: calc.grade,
+                predicate: calc.predicateText,
+                notes: document.getElementById('exam-notes').value
+            };
+
+            let history = JSON.parse(localStorage.getItem('umgo_btq_history') || '[]');
+            history.unshift(record);
+            localStorage.setItem('umgo_btq_history', JSON.stringify(history));
+
+            loadHistoryTable();
+            showToast('Data ujian mahasiswa berhasil disimpan ke Riwayat!');
+        }
+
+        function loadHistoryTable() {
+            const history = JSON.parse(localStorage.getItem('umgo_btq_history') || '[]');
+            const tbody = document.getElementById('history-table-body');
+            tbody.innerHTML = '';
+
+            if (history.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="p-4 text-center text-slate-500 italic">Belum ada riwayat ujian yang tersimpan.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            history.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/50 transition-colors';
+                
+                const isPassed = item.grade !== 'D';
+
+                tr.innerHTML = `
+                    <td class="p-3 text-slate-400 font-mono text-[11px]">${item.date}</td>
+                    <td class="p-3 font-semibold text-slate-200">${item.mhsName}</td>
+                    <td class="p-3 text-slate-400">${item.mhsNim}<br><span class="text-[10px] text-emerald-400">${item.prodi}</span></td>
+                    <td class="p-3 text-slate-300">${item.examiner}</td>
+                    <td class="p-3 text-center font-bold text-amber-300">${item.totalScore}</td>
+                    <td class="p-3 text-center">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isPassed ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-red-950 text-red-400 border border-red-800'}">
+                            Grade ${item.grade}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button onclick="deleteHistoryItem(${item.id})" class="text-red-400 hover:text-red-300 transition" title="Hapus Record">
+                            <i data-lucide="trash" class="w-4 h-4 inline"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        function deleteHistoryItem(id) {
+            let history = JSON.parse(localStorage.getItem('umgo_btq_history') || '[]');
+            history = history.filter(h => h.id !== id);
+            localStorage.setItem('umgo_btq_history', JSON.stringify(history));
+            loadHistoryTable();
+            showToast('Item riwayat berhasil dihapus.');
+        }
+
+        function clearAllHistory() {
+            if (confirm('Apakah Anda yakin ingin menghapus seluruh riwayat ujian tersimpan?')) {
+                localStorage.removeItem('umgo_btq_history');
+                loadHistoryTable();
+                showToast('Semua riwayat ujian telah dibersihkan.');
+            }
+        }
+
+        function printOfficialReport() {
+            const mhsName = document.getElementById('mhs-name').value.trim() || '(Nama Belum Diisi)';
+            const mhsNim = document.getElementById('mhs-nim').value.trim() || '------------';
+            const examiner = document.getElementById('examiner-name').value.trim() || '(Nama Penguji Belum Diisi)';
+
+            const calc = calculateFinalScore();
+
+            // Populate Print Template Data
+            document.getElementById('print-mhs-name').innerText = mhsName;
+            document.getElementById('print-mhs-nim').innerText = mhsNim;
+            document.getElementById('print-fakultas').innerText = document.getElementById('mhs-fakultas').value;
+            document.getElementById('print-prodi').innerText = document.getElementById('mhs-prodi').value;
+            document.getElementById('print-examiner').innerText = examiner;
+            document.getElementById('print-date').innerText = document.getElementById('exam-date').value;
+
+            // Scores
+            document.getElementById('print-score-tajwid').innerText = currentScores.tajwid;
+            document.getElementById('print-weighted-tajwid').innerText = (currentScores.tajwid * 0.40).toFixed(2);
+
+            document.getElementById('print-score-kelancaran').innerText = currentScores.kelancaran;
+            document.getElementById('print-weighted-kelancaran').innerText = (currentScores.kelancaran * 0.30).toFixed(2);
+
+            document.getElementById('print-score-adab').innerText = currentScores.adab;
+            document.getElementById('print-weighted-adab').innerText = (currentScores.adab * 0.15).toFixed(2);
+
+            document.getElementById('print-score-hafalan').innerText = currentScores.hafalan;
+            document.getElementById('print-weighted-hafalan').innerText = (currentScores.hafalan * 0.15).toFixed(2);
+
+            document.getElementById('print-final-score').innerText = calc.total;
+            document.getElementById('print-predicate-text').innerText = calc.predicateText;
+            document.getElementById('print-status').innerText = calc.isPassed ? 'LULUS' : 'TIDAK LULUS';
+
+            document.getElementById('print-notes').innerText = document.getElementById('exam-notes').value || 'Tidak ada catatan khusus dari penguji.';
+
+            document.getElementById('print-sig-mhs').innerText = `( ${mhsName} )`;
+            document.getElementById('print-sig-examiner').innerText = `( ${examiner} )`;
+            document.getElementById('print-sig-date').innerText = document.getElementById('exam-date').value;
+
+            // Execute print
+            window.print();
+        }
+
+        function resetForm() {
+            document.getElementById('mhs-name').value = '';
+            document.getElementById('mhs-nim').value = '';
+            document.getElementById('examiner-name').value = '';
+            document.getElementById('exam-notes').value = '';
+
+            ['tajwid', 'kelancaran', 'adab', 'hafalan'].forEach(comp => {
+                document.getElementById(`score-${comp}-range`).value = 80;
+                syncScore(comp, 'range');
+            });
+
+            showToast('Formulir berhasil di-reset.');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

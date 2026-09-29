@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Ujian Baca Al-Qur'an (BQ) - UPT AIK UMGO</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="assets/tema.js"></script>
+    <link rel="stylesheet" href="assets/tema.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #022c22;
+            background-image: radial-gradient(#047857 0.8px, transparent 0.8px), radial-gradient(#047857 0.8px, #022c22 0.8px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+        .font-arabic {
+            font-family: 'Amiri', serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(6, 78, 59, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #047857;
+            border-radius: 4px;
+        }
+        @media print {
+            body {
+                background: none !important;
+                background-color: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-emerald-950">
+
+    <!-- NAVBAR / HEADER -->
+    <header class="no-print sticky top-0 z-40 bg-emerald-950/90 backdrop-blur-md border-b border-emerald-700/50 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3.5 cursor-pointer" onclick="switchTab('register')">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-emerald-950 font-black shadow-lg shadow-amber-500/20 border border-amber-300">
+                    <i data-lucide="book-open" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold tracking-tight text-amber-300 leading-tight">UPT AIK UMGO</h1>
+                    <p class="text-xs text-emerald-200/90 font-medium">UPT AIK Dan Berasrama • Universitas Muhammadiyah Gorontalo</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1.5 bg-emerald-900/60 border border-emerald-700/50 p-1.5 rounded-2xl">
+                <button onclick="switchTab('register')" id="nav-register" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-400 text-emerald-950 shadow-md">
+                    <i data-lucide="pen-tool" class="w-4 h-4"></i> Pendaftaran BQ
+                </button>
+                <button onclick="switchTab('status')" id="nav-status" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-emerald-200 hover:text-white hover:bg-emerald-800/50">
+                    <i data-lucide="search" class="w-4 h-4"></i> Cek Status Registration
+                </button>
+                <button onclick="switchTab('faq')" id="nav-faq" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-emerald-200 hover:text-white hover:bg-emerald-800/50">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i> Informasi & FAQ
+                </button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-emerald-200 hover:text-white hover:bg-emerald-800/50">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Portal Admin
+                </button>
+            </nav>
+
+            <!-- Mobile Nav Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-emerald-200 hover:text-white bg-emerald-900/60 rounded-xl border border-emerald-700/50">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-emerald-950 border-b border-emerald-800 px-4 py-4 space-y-2">
+            <button onclick="switchTab('register'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 bg-amber-400 text-emerald-950">
+                <i data-lucide="pen-tool" class="w-4 h-4"></i> Pendaftaran BQ
+            </button>
+            <button onclick="switchTab('status'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 text-emerald-100 bg-emerald-900/40">
+                <i data-lucide="search" class="w-4 h-4"></i> Cek Status Registration
+            </button>
+            <button onclick="switchTab('faq'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 text-emerald-100 bg-emerald-900/40">
+                <i data-lucide="help-circle" class="w-4 h-4"></i> Informasi & FAQ
+            </button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 text-emerald-100 bg-emerald-900/40">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Portal Admin
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
+
+        <!-- TAB 1: FORM PENDAFTARAN -->
+        <section id="tab-register" class="tab-content space-y-8">
+            <!-- Hero Banner -->
+            <div class="no-print bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 border border-emerald-600/50 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-12 -bottom-16 opacity-10 text-emerald-100 font-arabic text-[14rem] pointer-events-none select-none">
+                    اقرأ
+                </div>
+                <div class="relative z-10 max-w-3xl space-y-3">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold rounded-full">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Tahun Akademik 2026/2027 • UPT AIK UMGO
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-white">
+                        Pendaftaran Online Ujian Baca Al-Qur'an (BQ) & Sertifikat AIK
+                    </h2>
+                    <p class="text-emerald-200/90 text-xs sm:text-sm leading-relaxed">
+                        Selamat datang di portal pendaftaran resmi UPT Al-Islam dan Kemuhammadiyah UMGO. Ujian BQ merupakan salah satu syarat KKD kelulusan dan pengajuan Proposal/Skripsi bagi seluruh mahasiswa UMGO.
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-4 text-xs font-semibold text-emerald-300">
+                        <div class="flex items-center gap-1.5"><i data-lucide="check-circle2" class="w-4 h-4 text-amber-400"></i> Syarat KKD/Proposal/Skripsi </div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="check-circle2" class="w-4 h-4 text-amber-400"></i> Sertifikat Resmi UPT AIK</div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="check-circle2" class="w-4 h-4 text-amber-400"></i> Wajib Bagi Mahasiswa Aktif</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-slate-900/90 border border-emerald-700/50 rounded-3xl p-6 sm:p-8 text-slate-100 shadow-2xl backdrop-blur-md">
+                <div class="border-b border-slate-800 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+                            <i data-lucide="clipboard-signature" class="w-5 h-5 text-emerald-400"></i> Formulir Registrasi Ujian
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Isi data mahasiswa dengan benar sesuai dengan KTP / KTM Aktif.</p>
+                    </div>
+                    <span class="text-xs text-emerald-400 font-mono bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800 self-start sm:self-auto">* Wajib Diisi</span>
+                </div>
+
+                <form id="registration-form" onsubmit="handleRegistrationSubmit(event)" class="space-y-6">
+                    <!-- Row 1: Nama & NIM -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Nama Lengkap Mahasiswa *</label>
+                            <div class="relative">
+                                <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-3 text-slate-500"></i>
+                                <input type="text" id="reg-nama" required placeholder="Contoh: Muhammad Fadhil" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">NIM (Nomor Induk Mahasiswa) *</label>
+                            <div class="relative">
+                                <i data-lucide="id-card" class="w-4 h-4 absolute left-3.5 top-3 text-slate-500"></i>
+                                <input type="text" id="reg-nim" required placeholder="Contoh: 2024010045" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Fakultas & Prodi -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Fakultas *</label>
+                            <select id="reg-fakultas" onchange="updateProdiDropdown()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <option value="FST">Fakultas Sains & Teknologi (FSIK)</option>
+                                <option value="FIKES">Fakultas Ilmu Kesehatan (FIKES)</option>
+                                <option value="FKIP">Fakultas Keguruan & Ilmu Pendidikan (FKIP)</option>
+                                <option value="FSI">Fakultas Agama Islam  (FAI)</option>
+                                <option value="FEB">Fakultas Ilmu Sosial (FIS)</option>
+                                <option value="FH">Fakultas Kedokteran (FK)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Program Studi *</label>
+                            <select id="reg-prodi" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Semester & Kontak -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Semester Saat Ini *</label>
+                            <select id="reg-semester" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <option value="Semester 2">Semester 2</option>
+                                <option value="Semester 4">Semester 4</option>
+                                <option value="Semester 6">Semester 6</option>
+                                <option value="Semester 8 (Akhir)">Semester 8 (Akhir)</option>
+                                <option value="Semester >8">Semester > 8</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">No. WhatsApp / HP *</label>
+                            <div class="relative">
+                                <i data-lucide="phone" class="w-4 h-4 absolute left-3.5 top-3 text-slate-500"></i>
+                                <input type="tel" id="reg-hp" required placeholder="0812xxxxxxxx" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Email Aktif *</label>
+                            <div class="relative">
+                                <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-3 text-slate-500"></i>
+                                <input type="email" id="reg-email" required placeholder="mahasiswa@umgo.ac.id" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Jenis Ujian & Gelombang -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Kategori / Jenis Ujian *</label>
+                            <select id="reg-kategori" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <option value="Ujian BTQ Reguler Mahasiswa">Ujian BTQ Reguler Mahasiswa</option>
+                                <option value="KKD (Kemuhammadiyahan)">KKD (Kuliah Kerja Dakwa)</option>
+                                <option value="Proposal (Ujian)">Sertifikasi AIK 2 (Ibadah & Muamalah)</option>
+                                <option value="Ujian BTQ Susulan / Perbaikan (Remedial)">Ujian BTQ Susulan / Perbaikan (Remedial)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Pilih Sesi / Gelombang Ujian *</label>
+                            <select id="reg-gelombang" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-amber-400 focus:outline-none transition">
+                                <option value="Gelombang I - Sabtu, 26 September 2026 (08.00 WITA)">Gelombang I - Sabtu, 26 September 2026 (08.00 WITA)</option>
+                                <option value="Gelombang II - Sabtu, 03 Oktober 2026 (08.00 WITA)">Gelombang II - Sabtu, 03 Oktober 2026 (08.00 WITA)</option>
+                                <option value="Gelombang III - Sabtu, 10 Oktober 2026 (13.00 WITA)">Gelombang III - Sabtu, 10 Oktober 2026 (13.00 WITA)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Upload Proof Simulation -->
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+                        <label class="block text-xs font-semibold text-slate-300">Unggah Bukti KRS Aktif / Slip Pembayaran (Format PDF/JPG) *</label>
+                        <div class="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-xl p-4 text-center cursor-pointer transition bg-slate-900/40">
+                            <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto text-emerald-400 mb-1"></i>
+                            <p class="text-xs text-slate-300 font-medium">Klik untuk upload berkas atau drag file ke sini</p>
+                            <p class="text-[10px] text-slate-500">Maksimal ukuran file: 2 MB (.pdf, .jpg, .png)</p>
+                            <input type="file" id="reg-file" class="hidden" onchange="handleFileSelected(this)">
+                            <span id="file-name-label" class="inline-block mt-2 text-xs font-bold text-amber-300 bg-amber-950/60 px-3 py-1 rounded-full border border-amber-800 hidden"></span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center justify-end gap-4 border-t border-slate-800">
+                        <button type="reset" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-600 transition">
+                            Reset Form
+                        </button>
+                        <button type="submit" class="px-7 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition transform active:scale-95">
+                            <i data-lucide="send" class="w-4 h-4 text-amber-300"></i> Kirim Pendaftaran
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 2: CEK STATUS PENDAFTARAN -->
+        <section id="tab-status" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900/90 border border-emerald-700/50 rounded-3xl p-6 sm:p-8 text-slate-100 shadow-2xl backdrop-blur-md max-w-2xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-12 h-12 rounded-full bg-emerald-950 border border-emerald-600 mx-auto flex items-center justify-center text-amber-400">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-amber-300">Cek Status Pendaftaran BTQ</h3>
+                    <p class="text-xs text-slate-400">Masukkan NIM Mahasiswa atau Nomor Registrasi Unik Anda untuk verifikasi jadwal dan status kartu ujian.</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="search-query" placeholder="Masukkan NIM / No. Registrasi (cth: 2024010045)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:border-amber-400 focus:outline-none">
+                    <button onclick="searchRegistrationStatus()" class="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-emerald-950 font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i data-lucide="search" class="w-4 h-4"></i> Cari Data
+                    </button>
+                </div>
+
+                <!-- Status Output Container -->
+                <div id="status-result-container" class="hidden pt-4 border-t border-slate-800">
+                    <!-- Dynamic Result Card -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: FAQ & INFORMASI UJIAN -->
+        <section id="tab-faq" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900/90 border border-emerald-700/50 rounded-3xl p-6 sm:p-8 text-slate-100 shadow-2xl backdrop-blur-md space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h3 class="text-xl font-bold text-amber-300 flex items-center gap-2">
+                        <i data-lucide="help-circle" class="w-6 h-6 text-emerald-400"></i> Panduan & Pertanyaan Umum (FAQ)
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">Petunjuk teknis pelaksanaan Ujian Baca Al-Qur'an UPT AIK Universitas Muhammadiyah Gorontalo.</p>
+                </div>
+
+                <div class="space-y-4 text-xs sm:text-sm">
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4 text-amber-400"></i> Siapa saja yang wajib mengikuti Ujian BQ UPT AIK?
+                        </h4>
+                        <p class="text-slate-300 leading-relaxed pl-6">
+                            Seluruh mahasiswa aktif Universitas Muhammadiyah Gorontalo (UMGO) jenjang S1 dan S2 wajib mengikuti Ujian BQ sebagai syarat KKD, pengajuan ujian Proposal/Skripsi.
+                        </p>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-amber-400"></i> Apa saja materi aspek penilaian ujian BTQ?
+                        </h4>
+                        <p class="text-slate-300 leading-relaxed pl-6">
+                            Materi ujian meliputi: (1) Kelancaran Bacaan', (2) Ketepatan Tajwid & Makharijul Huruf, (3) Adab Membaca Al-Qur'an.
+                        </p>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i> Di mana lokasi pelaksanaan ujian?
+                        </h4>
+                        <p class="text-slate-300 leading-relaxed pl-6">
+                            Ujian dilaksanakan secara Tatap Muka (Luring) berlokasi di **Gedung UPT AIK Kampus UMGO** . Harap hadir 10 menit sebelum sesi ujian dimulai.
+                        </p>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+                            <i data-lucide="shirt" class="w-4 h-4 text-amber-400"></i> Tata Tertib & Busana Ujian
+                        </h4>
+                        <p class="text-slate-300 leading-relaxed pl-6">
+                            Peserta Pria: Kemeja  rapi, celana kain.<br>
+                            Peserta Wanita: Busana muslimah syar'i (baju kurung/gamis) dan jilbab tidak menerawang. Membawa Al-Qur'an masing-masing.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PORTAL ADMIN UPT AIK -->
+        <section id="tab-admin" class="tab-content hidden space-y-6">
+            <div class="bg-slate-900/90 border border-emerald-700/50 rounded-3xl p-6 text-slate-100 shadow-2xl backdrop-blur-md space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i> Dasbor Admin UPT AIK UMGO
+                        </h3>
+                        <p class="text-xs text-slate-400">Verifikasi berkas pendaftar dan unduh rekapitulasi data mahasiswa.</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="exportToCSV()" class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl border border-emerald-500 transition flex items-center gap-1.5">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Ekspor CSV/Excel
+                        </button>
+                        <button onclick="clearAllRegistrations()" class="px-3.5 py-2 bg-red-950/70 hover:bg-red-900 text-red-300 text-xs font-bold rounded-xl border border-red-800 transition flex items-center gap-1.5">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear All Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Controls -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <span class="text-slate-400">Filter Status:</span>
+                        <select id="admin-filter-status" onchange="renderAdminTable()" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200">
+                            <option value="ALL">Semua Status</option>
+                            <option value="TERVERIFIKASI">Terverifikasi</option>
+                            <option value="MENUNGGU">Menunggu Verifikasi</option>
+                            <option value="DITOLAK">Ditolak</option>
+                        </select>
+                    </div>
+                    <span id="admin-count-badge" class="text-slate-400 font-mono">Total Pendaftar: 0</span>
+                </div>
+
+                <!-- Admin Table -->
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">No. Reg</th>
+                                <th class="p-3">Mahasiswa</th>
+                                <th class="p-3">NIM / Prodi</th>
+                                <th class="p-3">Ujian & Sesi</th>
+                                <th class="p-3 text-center">Status</th>
+                                <th class="p-3 text-right">Verifikasi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-slate-800/60">
+                            <!-- Dynamic Admin Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL BUKTI TIKET PENDAFTARAN (SIAP CETAK) -->
+    <div id="ticket-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto custom-scrollbar">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-3xl max-w-xl w-full p-6 text-slate-100 shadow-2xl relative my-8">
+            <button onclick="closeTicketModal()" class="no-print absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-800 rounded-full">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Printable Ticket Content -->
+            <div id="ticket-print-area" class="space-y-5">
+                <!-- Header Kop Ticket -->
+                <div class="text-center border-b-2 border-dashed border-emerald-700/60 pb-4">
+                    <div class="w-12 h-12 bg-amber-400 text-emerald-950 rounded-full mx-auto flex items-center justify-center font-bold text-lg mb-2">
+                        UMGO
+                    </div>
+                    <h3 class="text-base font-extrabold text-amber-300 uppercase tracking-wide">KARTU TIKET UJIAN BACA AL-QUR'AN (BTQ)</h3>
+                    <p class="text-[11px] text-emerald-200 font-medium">UPT AIK Dan Berasrama • Universitas Muhammadiyah Gorontalo</p>
+                </div>
+
+                <!-- Registration ID Badge -->
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block uppercase font-bold">Nomor Registrasi Unik</span>
+                        <span id="ticket-reg-no" class="text-sm sm:text-base font-mono font-black text-amber-400">AIK-UMGO-2026-0000</span>
+                    </div>
+                    <span id="ticket-status-tag" class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-amber-950 text-amber-400 border border-amber-800">MENUNGGU VERIFIKASI</span>
+                </div>
+
+                <!-- Detail Grid -->
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Nama Mahasiswa</span>
+                        <span id="ticket-nama" class="font-bold text-slate-100">-------</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">NIM</span>
+                        <span id="ticket-nim" class="font-bold text-slate-100">-------</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Fakultas / Prodi</span>
+                        <span id="ticket-prodi" class="font-bold text-slate-100">-------</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Jenis Ujian</span>
+                        <span id="ticket-kategori" class="font-bold text-slate-100">-------</span>
+                    </div>
+                </div>
+
+                <!-- Schedule Box -->
+                <div class="bg-emerald-950/80 border border-emerald-700/60 p-3.5 rounded-2xl text-xs space-y-1">
+                    <span class="text-emerald-300 font-bold block flex items-center gap-1">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> Jadwal & Lokasi Ujian:
+                    </span>
+                    <p id="ticket-jadwal" class="font-semibold text-white">------</p>
+                    <p class="text-[11px] text-emerald-200 italic">Lokasi: Gedung UPT AIK</p>
+                </div>
+
+                <!-- QR Simulation & Instructions -->
+                <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <div class="w-16 h-16 bg-white p-1 rounded-xl flex items-center justify-center shrink-0">
+                        <!-- Simulated QR SVG -->
+                        <svg class="w-full h-full text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm8-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm11-2h2v2h-2v-2zm-3 3h2v2h-2v-2zm3 3h2v2h-2v-2zm3-3h2v2h-2v-2zm0 3h2v2h-2v-2zm-3-6h2v2h-2v-2z"/>
+                        </svg>
+                    </div>
+                    <div class="text-[10px] text-slate-400 space-y-1">
+                        <p class="font-bold text-slate-200">Catatan Penting:</p>
+                        <p>1. Tunjukkan kartu bukti ini saat pelaksanaan ujian kepada penguji AIK.</p>
+                        <p>2. Berbusana Muslim/Muslimah syar'i & membawa mushaf Al-Qur'an.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="no-print mt-6 flex items-center justify-end gap-3 border-t border-slate-800 pt-4">
+                <button onclick="closeTicketModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-600">
+                    Tutup
+                </button>
+                <button onclick="printTicket()" class="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-emerald-950 font-bold text-xs rounded-xl shadow-lg flex items-center gap-2">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak / Simpan PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="no-print bg-slate-950 border-t border-slate-800 text-slate-400 text-xs py-6 text-center">
+        <div class="max-w-7xl mx-auto px-4 space-y-1">
+            <p class="font-semibold text-emerald-400">UPT AIK Dan Berasrama (AIK) • Universitas Muhammadiyah Gorontalo</p>
+            <p class="text-[11px] text-slate-500">Jl. Prof. Dr. Mansoer Pateda, Desa Pentadio Timur, Telaga Biru, Gorontalo</p>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+        <span id="toast-message">Notifikasi</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Data Fakultas & Prodi UMGO
+        const prodiData = {
+            'FST': ['S1 Bisdig', 'S1 Sistem Informasi', 'S1 ILKOM ', 'S1 Agribisnis', 'S1 Peternakan'],
+            'FIKES': ['S1 Keperawatan', 'Profesi Ners', 'S1 Kebidanan',  'S1 Informatika Medic', 'S1 Keperawatan Anastesi'],
+            'FKIP': ['S1 PGSD', 'S1 Pendidikan Olahraga', 'S1 Pendidikan Matematika'],
+            'FSI': ['S1 Hukum Keluarga Islam (Ahwal Syakhshiyyah)', 'S1 Komunikasi Penyiaran Islam'],
+            'FIS': ['S1 Manajemen', 'S1 Akuntansi', 'S1 Ekonomi Syariah'],
+            'FK': ['S1 Kedokteran']
+        };
+
+        let selectedFileName = "";
+
+        // Initialization
+        window.onload = function() {
+            lucide.createIcons();
+            updateProdiDropdown();
+            renderAdminTable();
+        };
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Unhighlight all nav buttons
+            ['register', 'status', 'faq', 'admin'].forEach(name => {
+                const btn = document.getElementById(`nav-${name}`);
+                if (btn) {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-emerald-200 hover:text-white hover:bg-emerald-800/50";
+                }
+            });
+
+            // Show active tab
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            // Highlight active button
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-400 text-emerald-950 shadow-md";
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function updateProdiDropdown() {
+            const fak = document.getElementById('reg-fakultas').value;
+            const prodiSelect = document.getElementById('reg-prodi');
+            prodiSelect.innerHTML = '';
+
+            prodiData[fak].forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.innerText = p;
+                prodiSelect.appendChild(opt);
+            });
+        }
+
+        function handleFileSelected(input) {
+            if (input.files && input.files[0]) {
+                selectedFileName = input.files[0].name;
+                const label = document.getElementById('file-name-label');
+                label.innerText = `File Terpilih: ${selectedFileName}`;
+                label.classList.remove('hidden');
+            }
+        }
+
+        function handleRegistrationSubmit(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('reg-nama').value.trim();
+            const nim = document.getElementById('reg-nim').value.trim();
+            const fakultas = document.getElementById('reg-fakultas').value;
+            const prodi = document.getElementById('reg-prodi').value;
+            const semester = document.getElementById('reg-semester').value;
+            const hp = document.getElementById('reg-hp').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const kategori = document.getElementById('reg-kategori').value;
+            const gelombang = document.getElementById('reg-gelombang').value;
+
+            // Generate Registration ID
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const regNo = `AIK-UMGO-2026-${randomNum}`;
+
+            const registrationRecord = {
+                regNo: regNo,
+                nama: nama,
+                nim: nim,
+                fakultas: fakultas,
+                prodi: prodi,
+                semester: semester,
+                hp: hp,
+                email: email,
+                kategori: kategori,
+                gelombang: gelombang,
+                fileName: selectedFileName || 'KRS_Mahasiswa.pdf',
+                status: 'MENUNGGU', // MENUNGGU, TERVERIFIKASI, DITOLAK
+                createdAt: new Date().toLocaleDateString('id-ID')
+            };
+
+            // Save to LocalStorage
+            let records = JSON.parse(localStorage.getItem('umgo_aik_registrations') || '[]');
+            records.unshift(registrationRecord);
+            localStorage.setItem('umgo_aik_registrations', JSON.stringify(records));
+
+            // Show Ticket Modal
+            showTicketModal(registrationRecord);
+            showToast('Pendaftaran Berhasil Dikirim!');
+            document.getElementById('registration-form').reset();
+            document.getElementById('file-name-label').classList.add('hidden');
+            renderAdminTable();
+        }
+
+        function showTicketModal(record) {
+            document.getElementById('ticket-reg-no').innerText = record.regNo;
+            document.getElementById('ticket-nama').innerText = record.nama;
+            document.getElementById('ticket-nim').innerText = record.nim;
+            document.getElementById('ticket-prodi').innerText = `${record.fakultas} / ${record.prodi}`;
+            document.getElementById('ticket-kategori').innerText = record.kategori;
+            document.getElementById('ticket-jadwal').innerText = record.gelombang;
+
+            const statusTag = document.getElementById('ticket-status-tag');
+            if (record.status === 'TERVERIFIKASI') {
+                statusTag.className = "px-2.5 py-1 text-[10px] font-bold rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800";
+                statusTag.innerText = "TERVERIFIKASI";
+            } else if (record.status === 'DITOLAK') {
+                statusTag.className = "px-2.5 py-1 text-[10px] font-bold rounded-full bg-red-950 text-red-400 border border-red-800";
+                statusTag.innerText = "DITOLAK";
+            } else {
+                statusTag.className = "px-2.5 py-1 text-[10px] font-bold rounded-full bg-amber-950 text-amber-400 border border-amber-800";
+                statusTag.innerText = "MENUNGGU VERIFIKASI";
+            }
+
+            document.getElementById('ticket-modal').classList.remove('hidden');
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticket-modal').classList.add('hidden');
+        }
+
+        function printTicket() {
+            window.print();
+        }
+
+        function searchRegistrationStatus() {
+            const query = document.getElementById('search-query').value.trim().toLowerCase();
+            const container = document.getElementById('status-result-container');
+            container.classList.remove('hidden');
+
+            if (!query) {
+                container.innerHTML = `<p class="text-xs text-red-400 text-center">Harap masukkan NIM atau Nomor Registrasi.</p>`;
+                return;
+            }
+
+            const records = JSON.parse(localStorage.getItem('umgo_aik_registrations') || '[]');
+            const found = records.find(r => r.nim.toLowerCase() === query || r.regNo.toLowerCase() === query);
+
+            if (!found) {
+                container.innerHTML = `
+                    <div class="bg-red-950/40 border border-red-800/60 p-4 rounded-2xl text-center space-y-1">
+                        <i data-lucide="alert-circle" class="w-6 h-6 text-red-400 mx-auto mb-1"></i>
+                        <h4 class="text-sm font-bold text-red-300">Data Pendaftaran Tidak Ditemukan</h4>
+                        <p class="text-xs text-slate-400">Pastikan NIM atau Nomor Registrasi yang Anda masukkan sudah benar.</p>
+                    </div>
+                `;
+            } else {
+                let statusBadge = `<span class="px-3 py-1 bg-amber-950 text-amber-400 border border-amber-800 rounded-full font-bold">MENUNGGU VERIFIKASI</span>`;
+                if (found.status === 'TERVERIFIKASI') {
+                    statusBadge = `<span class="px-3 py-1 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded-full font-bold">TERVERIFIKASI & SETUJU</span>`;
+                } else if (found.status === 'DITOLAK') {
+                    statusBadge = `<span class="px-3 py-1 bg-red-950 text-red-400 border border-red-800 rounded-full font-bold">DITOLAK / BERKAS TIDAK SESUAI</span>`;
+                }
+
+                container.innerHTML = `
+                    <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-4 text-xs">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <span class="font-mono font-bold text-amber-400 text-sm">${found.regNo}</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><span class="text-slate-500">Nama:</span> <span class="font-bold text-slate-200 block">${found.nama}</span></div>
+                            <div><span class="text-slate-500">NIM:</span> <span class="font-bold text-slate-200 block">${found.nim}</span></div>
+                            <div><span class="text-slate-500">Prodi:</span> <span class="font-bold text-slate-200 block">${found.prodi}</span></div>
+                            <div><span class="text-slate-500">Ujian:</span> <span class="font-bold text-slate-200 block">${found.kategori}</span></div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-end">
+                            <button onclick='showTicketModal(${JSON.stringify(found)})' class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5">
+                                <i data-lucide="ticket" class="w-4 h-4"></i> Lihat Tiket Kartu Ujian
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // ADMIN FUNCTIONS
+        function renderAdminTable() {
+            const records = JSON.parse(localStorage.getItem('umgo_aik_registrations') || '[]');
+            const filter = document.getElementById('admin-filter-status').value;
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            let filtered = records;
+            if (filter !== 'ALL') {
+                filtered = records.filter(r => r.status === filter);
+            }
+
+            document.getElementById('admin-count-badge').innerText = `Total Pendaftar: ${filtered.length}`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-slate-500 italic">Belum ada data pendaftaran yang tersimpan.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/50 transition-colors';
+
+                let badgeClass = "bg-amber-950 text-amber-400 border-amber-800";
+                if (item.status === 'TERVERIFIKASI') badgeClass = "bg-emerald-950 text-emerald-400 border-emerald-800";
+                if (item.status === 'DITOLAK') badgeClass = "bg-red-950 text-red-400 border-red-800";
+
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-[11px] text-amber-300 font-bold">${item.regNo}</td>
+                    <td class="p-3 font-semibold text-slate-200">${item.nama}<br><span class="text-[10px] text-slate-400">${item.email}</span></td>
+                    <td class="p-3 text-slate-400">${item.nim}<br><span class="text-[10px] text-emerald-400">${item.prodi}</span></td>
+                    <td class="p-3 text-slate-300">${item.kategori}<br><span class="text-[10px] text-slate-400">${item.gelombang.split('-')[0]}</span></td>
+                    <td class="p-3 text-center">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeClass}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right space-x-1">
+                        <button onclick="updateStatus('${item.regNo}', 'TERVERIFIKASI')" class="p-1.5 bg-emerald-800 hover:bg-emerald-700 text-emerald-200 rounded-lg" title="Setujui">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <button onclick="updateStatus('${item.regNo}', 'DITOLAK')" class="p-1.5 bg-red-950 hover:bg-red-900 text-red-300 rounded-lg" title="Tolak">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        function updateStatus(regNo, newStatus) {
+            let records = JSON.parse(localStorage.getItem('umgo_aik_registrations') || '[]');
+            const index = records.findIndex(r => r.regNo === regNo);
+            if (index !== -1) {
+                records[index].status = newStatus;
+                localStorage.setItem('umgo_aik_registrations', JSON.stringify(records));
+                renderAdminTable();
+                showToast(`Status ${regNo} berhasil diperbarui!`);
+            }
+        }
+
+        function clearAllRegistrations() {
+            if (confirm('Yakin ingin menghapus seluruh data pendaftaran pendaftar?')) {
+                localStorage.removeItem('umgo_aik_registrations');
+                renderAdminTable();
+                showToast('Seluruh data pendaftaran berhasil dibersihkan.');
+            }
+        }
+
+        function exportToCSV() {
+            const records = JSON.parse(localStorage.getItem('umgo_aik_registrations') || '[]');
+            if (records.length === 0) {
+                showToast('Tidak ada data pendaftar untuk diekspor!');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "No Registrasi,Nama,NIM,Fakultas,Prodi,Semester,No HP,Email,Kategori Ujian,Jadwal Sesi,Status\n";
+
+            records.forEach(r => {
+                const row = `"${r.regNo}","${r.nama}","${r.nim}","${r.fakultas}","${r.prodi}","${r.semester}","${r.hp}","${r.email}","${r.kategori}","${r.gelombang}","${r.status}"`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Pendaftaran_BQ_UMGO_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
