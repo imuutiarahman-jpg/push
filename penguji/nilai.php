@@ -108,6 +108,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;background-im
   #print-area .p-8{padding:0 !important;}
   #print-area .pb-4{padding-bottom:0.4rem !important;}
   #print-area .pt-8{padding-top:0.6rem !important;}
+  #print-area .sig-block{display:flex !important;flex-direction:row !important;justify-content:space-between !important;align-items:flex-start !important;gap:0 !important;}
   #print-area .space-y-12 > :not([hidden]) ~ :not([hidden]){margin-top:1rem !important;}
   #print-area img{width:52px !important;height:52px !important;}
   #print-area h2{font-size:13pt !important;line-height:1.2 !important;}
@@ -123,18 +124,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;background-im
 </head>
 <body class="text-slate-100 min-h-screen">
 <header class="no-print bg-emerald-950/90 border-b border-emerald-700/50 sticky top-0 z-40">
-<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<a href="dashboard.php" class="text-xs text-emerald-300">&larr; Peserta Saya</a>
-<span class="text-slate-600">|</span>
-<span class="text-xs text-amber-300 font-bold"><?= e($pengujiNamaSess) ?></span>
+<div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
+<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+<a href="dashboard.php" class="shrink-0 text-xs text-emerald-300">&larr; Peserta Saya</a>
+<span class="text-slate-600 shrink-0">|</span>
+<span class="min-w-0 truncate text-xs text-amber-300 font-bold"><?= e($pengujiNamaSess) ?></span>
 </div>
-<h1 class="font-bold text-amber-300 text-sm hidden sm:block">Penilaian BTQ Penguji</h1>
-<a href="logout.php" class="px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
+<h1 class="font-bold text-amber-300 text-sm hidden sm:block shrink-0">Penilaian BTQ Penguji</h1>
+<a href="logout.php" class="shrink-0 px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
 </div>
 </header>
 
-<main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+<main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
 <?php if ($msg): ?><div class="no-print bg-emerald-900/70 border border-emerald-600 text-xs p-3 rounded-xl"><?= e($msg) ?></div><?php endif; ?>
 <?php if ($err): ?><div class="no-print bg-red-950/60 border border-red-800 text-xs p-3 rounded-xl text-red-300"><?= e($err) ?></div><?php endif; ?>
 
@@ -293,9 +294,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;background-im
 <div class="text-right"><span class="font-bold block">STATUS:</span><span class="text-sm font-extrabold"><?= $isLulus ? 'LULUS' : 'TIDAK LULUS' ?></span></div>
 </div>
 <div class="space-y-1 text-xs"><span class="font-bold">CATATAN PENGUJI:</span><p class="p-2 border border-slate-300 rounded italic"><?= e($catatanVal !== '' ? $catatanVal : 'Tidak ada catatan khusus.') ?></p></div>
-<div class="pt-8 flex justify-between text-xs">
-<div class="text-center w-48 space-y-12"><p>Mahasiswa Teruji,</p><p class="font-bold underline uppercase">( <?= e($r['nama']) ?> )</p></div>
-<div class="text-center w-56 space-y-12"><p>Gorontalo, <?= e($tglVal) ?><br>Dosen Penguji,</p><p class="font-bold underline uppercase">( <?= e($h['penguji_nama'] ?? $r['penguji_nama'] ?? '.......................') ?> )</p></div>
+<div class="sig-block pt-8 flex flex-col min-[480px]:flex-row items-center min-[480px]:items-start justify-between gap-8 min-[480px]:gap-0 text-xs">
+<div class="text-center w-full min-[480px]:w-48 space-y-12"><p>Mahasiswa Teruji,</p><p class="font-bold underline uppercase break-words">( <?= e($r['nama']) ?> )</p></div>
+<div class="text-center w-full min-[480px]:w-56 space-y-12"><p>Gorontalo, <?= e($tglVal) ?><br>Dosen Penguji,</p><p class="font-bold underline uppercase break-words">( <?= e($h['penguji_nama'] ?? $r['penguji_nama'] ?? '.......................') ?> )</p></div>
 </div>
 </div>
 

@@ -56,6 +56,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;}
   #print-area .space-y-1 > :not([hidden]) ~ :not([hidden]){margin-top:0.2rem !important;}
   #print-area .pb-4{padding-bottom:0.4rem !important;}
   #print-area .pt-8{padding-top:0.6rem !important;}
+  #print-area .sig-block{display:flex !important;flex-direction:row !important;justify-content:space-between !important;align-items:flex-start !important;gap:0 !important;}
   #print-area .space-y-12 > :not([hidden]) ~ :not([hidden]){margin-top:1rem !important;}
   #print-area img{width:52px !important;height:52px !important;}
   #print-area h2{font-size:13pt !important;line-height:1.2 !important;}
@@ -124,9 +125,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;}
       <div class="text-right"><span class="font-bold block">STATUS:</span><span class="text-sm font-extrabold"><?= $isLulus ? 'LULUS' : 'TIDAK LULUS' ?></span></div>
     </div>
     <div class="space-y-1 text-xs"><span class="font-bold">CATATAN PENGUJI:</span><p class="p-2 border border-slate-300 rounded italic"><?= e($catatanVal !== '' ? $catatanVal : 'Tidak ada catatan khusus.') ?></p></div>
-    <div class="pt-8 flex justify-between text-xs">
-      <div class="text-center w-48 space-y-12"><p>Mahasiswa Teruji,</p><p class="font-bold underline uppercase">( <?= e($r['nama']) ?> )</p></div>
-      <div class="text-center w-56 space-y-12"><p>Gorontalo, <?= e($tglVal) ?><br>Dosen Penguji,</p><p class="font-bold underline uppercase">( <?= e($pengujiNama) ?> )</p></div>
+    <div class="sig-block pt-8 flex flex-col min-[480px]:flex-row items-center min-[480px]:items-start justify-between gap-8 min-[480px]:gap-0 text-xs">
+      <div class="text-center w-full min-[480px]:w-48 space-y-12"><p>Mahasiswa Teruji,</p><p class="font-bold underline uppercase break-words">( <?= e($r['nama']) ?> )</p></div>
+      <div class="text-center w-full min-[480px]:w-56 space-y-12"><p>Gorontalo, <?= e($tglVal) ?><br>Dosen Penguji,</p><p class="font-bold underline uppercase break-words">( <?= e($pengujiNama) ?> )</p></div>
     </div>
   </div>
 <?php endif; ?>

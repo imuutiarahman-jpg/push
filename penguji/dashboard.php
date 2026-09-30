@@ -47,24 +47,24 @@ $flash = $_GET['msg'] ?? '';
 </head>
 <body class="text-slate-100 min-h-screen">
 <header class="bg-emerald-950/90 border-b border-emerald-700/50 sticky top-0 z-40">
-<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<img src="../logo/logo-umgo.jpeg" alt="Logo UPT AIK UMGO" class="w-10 h-10 rounded-xl object-cover border border-amber-300 bg-white">
-<div><h1 class="font-bold text-amber-300 text-sm">Portal Penguji BTQ</h1><p class="text-[11px] text-emerald-200"><?= e($pengujiNama) ?> &bull; <?= $total ?>/<?= $kuotaSaya ?> peserta</p></div>
+<div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
+<div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+<img src="../logo/logo-umgo.jpeg" alt="Logo UPT AIK UMGO" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover border border-amber-300 bg-white shrink-0">
+<div class="min-w-0"><h1 class="font-bold text-amber-300 text-sm truncate">Portal Penguji BTQ</h1><p class="text-[11px] text-emerald-200 truncate"><?= e($pengujiNama) ?> &bull; <?= $total ?>/<?= $kuotaSaya ?> peserta</p></div>
 </div>
-<a href="logout.php" class="px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
+<a href="logout.php" class="shrink-0 px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
 </div>
 </header>
-<main class="max-w-7xl mx-auto px-4 py-6 space-y-5">
+<main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-5">
 <?php if ($flash): ?><div class="bg-emerald-900/70 border border-emerald-600 text-xs p-3 rounded-xl"><?= e($flash) ?></div><?php endif; ?>
 
-<div class="grid grid-cols-3 gap-3">
-<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-4 text-center"><p class="text-2xl font-black text-amber-400"><?= $total ?></p><p class="text-[11px] text-slate-400">Total Peserta</p></div>
-<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-4 text-center"><p class="text-2xl font-black text-emerald-400"><?= $sudah ?></p><p class="text-[11px] text-slate-400">Sudah Dinilai</p></div>
-<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-4 text-center"><p class="text-2xl font-black text-emerald-300"><?= $lulus ?></p><p class="text-[11px] text-slate-400">Lulus</p></div>
+<div class="grid grid-cols-3 gap-2 sm:gap-3">
+<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-3 sm:p-4 text-center"><p class="text-xl sm:text-2xl font-black text-amber-400"><?= $total ?></p><p class="text-[10px] sm:text-[11px] text-slate-400">Total Peserta</p></div>
+<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-3 sm:p-4 text-center"><p class="text-xl sm:text-2xl font-black text-emerald-400"><?= $sudah ?></p><p class="text-[10px] sm:text-[11px] text-slate-400">Sudah Dinilai</p></div>
+<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl p-3 sm:p-4 text-center"><p class="text-xl sm:text-2xl font-black text-emerald-300"><?= $lulus ?></p><p class="text-[10px] sm:text-[11px] text-slate-400">Lulus</p></div>
 </div>
 
-<div class="bg-slate-900/90 border border-emerald-700/50 rounded-3xl p-5 space-y-4">
+<div class="bg-slate-900/90 border border-emerald-700/50 rounded-2xl sm:rounded-3xl p-3 sm:p-5 space-y-4">
 <form method="GET" class="flex flex-col sm:flex-row gap-3 text-xs">
 <select name="filter" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5">
 <?php foreach ($allowed as $f): ?><option value="<?= $f ?>" <?= $filter===$f?'selected':'' ?>><?= $f==='ALL'?'Semua':($f==='BELUM'?'Belum dinilai':($f==='SUDAH'?'Sudah dinilai':'Lulus')) ?></option><?php endforeach; ?>
@@ -72,8 +72,8 @@ $flash = $_GET['msg'] ?? '';
 <input name="q" value="<?= e($q) ?>" placeholder="Cari nama / NIM / reg_no..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 focus:border-amber-400 focus:outline-none">
 <button class="px-5 py-2.5 bg-amber-400 text-emerald-950 font-bold rounded-xl">Filter</button>
 </form>
-<div class="overflow-x-auto rounded-xl border border-slate-800">
-<table class="w-full text-left text-xs">
+<div class="hidden sm:block overflow-x-auto rounded-xl border border-slate-800">
+<table class="w-full text-left text-xs min-w-[720px]">
 <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800"><tr><th class="p-3">No.Reg / Mahasiswa</th><th class="p-3">NIM / Prodi</th><th class="p-3">Status Daftar</th><th class="p-3 text-center">Nilai</th><th class="p-3 text-right">Aksi</th></tr></thead>
 <tbody class="divide-y divide-slate-800/60">
 <?php if (!$rows): ?><tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Belum ada peserta untuk Anda. Hubungi admin.</td></tr><?php endif; ?>
@@ -89,6 +89,22 @@ $flash = $_GET['msg'] ?? '';
 <?php endforeach; ?>
 </tbody>
 </table>
+</div>
+<div class="sm:hidden space-y-3">
+<?php if (!$rows): ?><p class="p-4 text-center text-slate-500 italic text-xs">Belum ada peserta untuk Anda. Hubungi admin.</p><?php endif; ?>
+<?php foreach ($rows as $r): ?>
+<?php $dinilai = $r['total'] !== null; ?>
+<div class="bg-slate-950 border border-slate-800 rounded-2xl p-3.5 space-y-2.5 text-xs">
+<div class="min-w-0"><p class="font-mono text-amber-300 font-bold text-[11px] break-all"><?= e($r['reg_no']) ?></p>
+<p class="font-bold text-slate-100 text-sm leading-snug break-words"><?= e($r['nama']) ?> <span class="px-1.5 py-0.5 rounded text-[10px] font-bold border border-amber-800 bg-amber-950 text-amber-300"><?= e($r['jalur'] ?? 'Reguler') ?></span></p>
+<p class="text-slate-400 text-[11px]"><?= e($r['nim']) ?> &bull; <span class="text-emerald-400"><?= e($r['prodi']) ?></span></p></div>
+<div class="flex items-center justify-between gap-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border <?= $r['status']==='TERVERIFIKASI'?'bg-emerald-950 text-emerald-400 border-emerald-800':($r['status']==='DITOLAK'?'bg-red-950 text-red-400 border-red-800':'bg-amber-950 text-amber-400 border-amber-800') ?>"><?= e($r['status']) ?></span>
+<?php if ($dinilai): ?><span class="text-[11px]">Nilai <b class="text-amber-300"><?= e($r['total']) ?></b> <span class="px-1.5 py-0.5 rounded text-[10px] font-bold border <?= $r['status_lulus']==='LULUS'?'bg-emerald-950 text-emerald-400 border-emerald-800':'bg-red-950 text-red-400 border-red-800' ?>"><?= e($r['grade']) ?></span></span><?php else: ?><span class="text-slate-500 italic text-[11px]">Belum dinilai</span><?php endif; ?>
+</div>
+<a href="nilai.php?id=<?= (int)$r['id'] ?>" class="block w-full px-4 py-2.5 <?= $dinilai?'bg-emerald-700':'bg-amber-400 text-emerald-950' ?> rounded-xl font-bold text-center"><?= $dinilai?'Lihat / Edit':'Nilai' ?></a>
+</div>
+<?php endforeach; ?>
 </div>
 </div>
 </main>

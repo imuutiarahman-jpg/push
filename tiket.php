@@ -30,7 +30,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#022c22;}
 </style>
 </head>
 <body class="text-slate-100 min-h-screen flex items-center justify-center p-4">
-<div id="ticket" class="bg-slate-900 border border-emerald-500/50 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+<div id="ticket" class="bg-slate-900 border border-emerald-500/50 rounded-3xl max-w-xl w-full p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 break-words">
     <div class="text-center border-b-2 border-dashed border-emerald-700/60 pb-4">
         <img src="logo/logo-umgo.jpeg" alt="Logo UPT AIK UMGO" class="w-14 h-14 rounded-full object-cover mx-auto mb-2 border-2 border-amber-400 bg-white">
         <h3 class="font-extrabold text-amber-300 uppercase">Kartu Tiket Ujian BTQ</h3>

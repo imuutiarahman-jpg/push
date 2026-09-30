@@ -78,14 +78,14 @@ if ($pq) while ($pp = $pq->fetch_assoc()) $prodiMap[$pp['kode']][] = $pp['nama']
 <body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-emerald-950">
 
 <header class="sticky top-0 z-40 bg-emerald-950/90 backdrop-blur-md border-b border-emerald-700/50 shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <div class="flex items-center gap-3.5 cursor-pointer" onclick="switchTab('register')">
-            <div>
-                <img src="logo/logo-umgo.jpeg" alt="Logo UPT AIK UMGO" class="w-12 h-12 rounded-2xl object-cover shadow-lg border border-amber-300 bg-white">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 cursor-pointer" onclick="switchTab('register')">
+            <div class="shrink-0">
+                <img src="logo/logo-umgo.jpeg" alt="Logo UPT AIK UMGO" class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl object-cover shadow-lg border border-amber-300 bg-white">
             </div>
-            <div>
-                <h1 class="text-base sm:text-lg font-bold tracking-tight text-amber-300 leading-tight">UPT AIK UMGO</h1>
-                <p class="text-xs text-emerald-200/90 font-medium">UPT AIK Dan Berasrama &bull; Universitas Muhammadiyah Gorontalo</p>
+            <div class="min-w-0">
+                <h1 class="text-base sm:text-lg font-bold tracking-tight text-amber-300 leading-tight truncate">UPT AIK UMGO</h1>
+                <p class="hidden sm:block text-xs text-emerald-200/90 font-medium">UPT AIK Dan Berasrama &bull; Universitas Muhammadiyah Gorontalo</p>
             </div>
         </div>
         <div class="hidden md:flex items-center gap-3">
@@ -113,7 +113,7 @@ if ($pq) while ($pp = $pq->fetch_assoc()) $prodiMap[$pp['kode']][] = $pp['nama']
             <a href="admin/login.php" class="px-3 py-2 rounded-xl text-emerald-200/60 hover:text-white hover:bg-emerald-900/60 transition flex items-center gap-1.5" title="Portal Admin"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Admin</a>
         </div>
         </div>
-        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-emerald-200 bg-emerald-900/60 rounded-xl border border-emerald-700/50">
+        <button onclick="toggleMobileMenu()" class="md:hidden shrink-0 p-2 text-emerald-200 bg-emerald-900/60 rounded-xl border border-emerald-700/50">
             <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
     </div>
@@ -134,7 +134,7 @@ if ($pq) while ($pp = $pq->fetch_assoc()) $prodiMap[$pp['kode']][] = $pp['nama']
     </div>
 </header>
 
-<main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
+<main class="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 flex-1 space-y-5 sm:space-y-8">
 
 <?php if (isset($_GET['success'])): ?>
 <div class="bg-emerald-900/80 border border-emerald-500/50 rounded-2xl p-4 text-sm flex items-center gap-2">
@@ -153,13 +153,13 @@ if ($pq) while ($pp = $pq->fetch_assoc()) $prodiMap[$pp['kode']][] = $pp['nama']
 
 <!-- TAB REGISTER -->
 <section id="tab-register" class="tab-content space-y-8">
-    <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 border border-emerald-600/50 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
-        <div class="absolute -right-12 -bottom-16 opacity-10 font-arabic text-[14rem] pointer-events-none select-none">اقرأ</div>
+    <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 border border-emerald-600/50 rounded-3xl p-5 sm:p-8 text-white shadow-2xl relative overflow-hidden">
+        <div class="absolute -right-12 -bottom-16 opacity-10 font-arabic text-[8rem] sm:text-[14rem] pointer-events-none select-none">اقرأ</div>
         <div class="relative z-10 max-w-3xl space-y-3">
             <span class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-amber-400/20 border border-amber-400/40 text-amber-300 text-xs font-bold rounded-full">
                 <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Tahun Akademik 2026/2027 &bull; UPT AIK UMGO
             </span>
-            <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">Pendaftaran Online Ujian Baca Al-Qur'an (BQ) &amp; Sertifikat AIK</h2>
+            <h2 class="text-xl sm:text-4xl font-black tracking-tight leading-tight">Pendaftaran Online Ujian Baca Al-Qur'an (BQ) &amp; Sertifikat AIK</h2>
             <p class="text-emerald-200/90 text-xs sm:text-sm leading-relaxed">Ujian BQ merupakan salah satu syarat KKD, kelulusan dan pengajuan Proposal/Skripsi bagi seluruh mahasiswa UMGO.</p>
             <?php if (!$isLogin): ?>
             <div class="flex flex-wrap gap-2.5 pt-1">

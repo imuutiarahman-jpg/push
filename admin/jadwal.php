@@ -76,12 +76,12 @@ $rows = $conn->query("SELECT * FROM jadwal ORDER BY tanggal, id")->fetch_all(MYS
 </head>
 <body class="text-slate-100 min-h-screen">
 <header class="bg-emerald-950/90 border-b border-emerald-700/50 sticky top-0 z-40">
-<div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-<a href="dashboard.php" class="text-xs text-emerald-300">&larr; Dashboard</a>
-<h1 class="font-bold text-amber-300 text-sm">Jadwal &amp; Tempat Ujian</h1>
-<a href="logout.php" class="px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
+<div class="max-w-5xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2">
+<a href="dashboard.php" class="shrink-0 text-xs text-emerald-300">&larr; Dashboard</a>
+<h1 class="min-w-0 flex-1 text-center font-bold text-amber-300 text-xs sm:text-sm truncate">Jadwal &amp; Tempat Ujian</h1>
+<a href="logout.php" class="shrink-0 px-3 py-2 text-xs font-bold bg-red-950 rounded-xl border border-red-800 text-red-300">Logout</a>
 </div></header>
-<main class="max-w-5xl mx-auto px-4 py-6 space-y-5">
+<main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-5">
 <?php if ($msg): ?><div class="bg-emerald-900/70 border border-emerald-600 text-xs p-3 rounded-xl"><?= e($msg) ?></div><?php endif; ?>
 <?php if ($err): ?><div class="bg-red-950/60 border border-red-800 text-xs p-3 rounded-xl text-red-300"><?= e($err) ?></div><?php endif; ?>
 
